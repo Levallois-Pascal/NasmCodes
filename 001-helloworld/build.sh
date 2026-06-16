@@ -6,49 +6,46 @@ TARGET="helloworld"
 SOURCE="helloworld.asm"
 FORMAT="elf64"
 
-# Fonction pour compiler le programme
+# How to compile
 compile() {
-    echo "Compilation de $SOURCE..."
+    echo "Compilation of $SOURCE..."
     nasm -f $FORMAT $SOURCE -o "${TARGET}.o"
     if [ $? -eq 0 ]; then
-        echo "Compilation réussie !"
+        echo "Compilation ok!"
         ld "${TARGET}.o" -o $TARGET
         if [ $? -eq 0 ]; then
-            echo "Liaison réussie !"
+            echo "Linking ok!"
         else
-            echo "Erreur lors de la liaison."
+            echo "Linking errors."
             exit 1
         fi
     else
-        echo "Erreur lors de la compilation."
+        echo "Compil errors."
         exit 1
     fi
 }
 
-# Fonction pour exécuter le programme
+# Exec function
 run() {
     if [ -f "$TARGET" ]; then
-        echo "Exécution de $TARGET..."
+        echo "$TARGET execution..."
         ./$TARGET
     else
-        echo "Le programme $TARGET n'existe pas. Compilation en cours..."
+        echo "$TARGET doesn't exist. Compiling..."
         compile
         ./$TARGET
     fi
 }
 
-# Fonction pour nettoyer les fichiers générés
+# Clean function
 clean() {
-    echo "Nettoyage des fichiers générés..."
+    echo "Cleaning up generated files."
     rm -f "${TARGET}.o" $TARGET
-    echo "Nettoyage terminé."
+    echo "Cleaning up complete."
 }
 
-# Gestion des arguments du script
+# Script arguments
 case "$1" in
-    compile)
-        compile
-        ;;
     run)
         run
         ;;
@@ -56,11 +53,9 @@ case "$1" in
         clean
         ;;
     *)
-        echo "Usage: $0 {compile|run|clean}"
-        echo "  compile : Compile le programme assembleur."
+        echo "Usage: $0 {run|clean}"
         echo "  run     : Exécute le programme."
         echo "  clean   : Nettoie les fichiers générés."
         exit 1
         ;;
 esac
-
